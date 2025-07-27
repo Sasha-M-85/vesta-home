@@ -171,6 +171,39 @@
     alert('Данные успешно сохранены!');
   });
 
+
+  // --- Режим создания нового клиента ---
+  if (!clientId) {
+    document.getElementById('client-title').innerText = 'Новый клиент';
+    document.getElementById('edit-btn').style.display = 'none';
+    document.getElementById('delete-btn').style.display = 'none';
+    document.getElementById('save-btn').style.display = 'inline-block';
+    document.getElementById('client-name').disabled = false;
+    document.getElementById('client-phone').disabled = false;
+
+    saveBtn.addEventListener('click', async () => {
+      const name = nameInput.value.trim();
+      const phone = phoneInput.value.trim();
+      if (!name || !phone) {
+        alert('Введите имя и телефон');
+        return;
+      }
+
+      const { data, error } = await supabase
+        .from('clients')
+        .insert([{ name, phone }]);
+
+      if (error) {
+        alert('Ошибка при создании клиента.');
+        console.error(error);
+        return;
+      }
+
+      alert('Клиент успешно создан!');
+      window.location.href = 'clients.html';
+    });
+  }
+
 </script>
 
 </body>
