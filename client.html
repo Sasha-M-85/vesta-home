@@ -45,7 +45,7 @@
     <a href="clients.html" class="btn btn-link">&larr; Назад к списку клиентов</a>
   </div>
 
-  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js"></script>
+  
   <script>
     const SUPABASE_URL = 'https://rincxoalnhfsnwgwxrfb.supabase.co';
     const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InJpbmN4b2Fsbmhmc253Z3d4cmZiIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTM2MjE2MzMsImV4cCI6MjA2OTE5NzYzM30.95JhUW9uRbcHSkFCXyh40acSAAnJIj3nbUICQGqW32Y';
@@ -72,5 +72,42 @@
 
     loadClient();
   </script>
+
+<script type="module">
+  import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm'
+
+  const SUPABASE_URL = 'https://rincxoalnhfsnwgwxrfb.supabase.co'
+  const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InJpbmN4b2Fsbmhmc253Z3d4cmZiIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTM2MjE2MzMsImV4cCI6MjA2OTE5NzYzM30.95JhUW9uRbcHSkFCXyh40acSAAnJIj3nbUICQGqW32Y'
+
+  const supabase = createClient(SUPABASE_URL, SUPABASE_KEY)
+
+  const clientId = new URLSearchParams(window.location.search).get('id')
+
+  async function loadClient() {
+    const { data, error } = await supabase
+      .from('clients')
+      .select('*')
+      .eq('id', clientId)
+      .single()
+
+    if (error) {
+      console.error('Ошибка загрузки клиента:', error)
+      return
+    }
+
+    document.getElementById('client-name').value = data.name
+    document.getElementById('client-phone').value = data.phone
+    document.getElementById('client-created').innerText = data.created_at?.split('T')[0]
+    document.getElementById('client-title').innerText = `Клиент: ${data.name}`
+  }
+
+  document.getElementById('edit-btn').addEventListener('click', () => {
+    document.getElementById('client-name').disabled = false
+    document.getElementById('client-phone').disabled = false
+  })
+
+  loadClient()
+</script>
+
 </body>
 </html>
