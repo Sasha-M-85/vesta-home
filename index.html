@@ -1,145 +1,42 @@
+
 <!DOCTYPE html>
 <html lang="ru">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Vesta Home – Заказы</title>
-  <style>
-    body {
-      margin: 0;
-      font-family: sans-serif;
-      background-color: #f4f6f8;
-    }
-    .container {
-      display: flex;
-      flex-direction: column;
-      padding: 16px;
-      gap: 16px;
-    }
-    h1 {
-      color: #2a7be4;
-      margin: 0 0 16px 0;
-    }
-    table {
-      width: 100%;
-      border-collapse: collapse;
-      background: #fff;
-      border-radius: 8px;
-      overflow: hidden;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-    }
-    th, td {
-      padding: 12px 16px;
-      border-bottom: 1px solid #eee;
-      text-align: left;
-    }
-    th {
-      background: #f0f4f8;
-    }
-    .status {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-    }
-    .dot {
-      width: 10px;
-      height: 10px;
-      border-radius: 50%;
-    }
-    .new { background-color: red; }
-    .waiting { background-color: orange; }
-    .approved { background-color: green; }
-    .card {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 16px;
-    }
-    .block {
-      background: #fff;
-      padding: 16px;
-      border-radius: 8px;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-      flex: 1;
-      min-width: 280px;
-    }
-    .btn {
-      background: #2a7be4;
-      color: #fff;
-      border: none;
-      padding: 10px 16px;
-      margin-top: 8px;
-      border-radius: 6px;
-      cursor: pointer;
-      font-weight: bold;
-    }
-    .file-row {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-top: 8px;
-    }
-    .calendar {
-      display: grid;
-      grid-template-columns: repeat(7, 1fr);
-      gap: 6px;
-      text-align: center;
-      margin-top: 8px;
-    }
-    .calendar div {
-      padding: 8px;
-      background: #e0e7ff;
-      border-radius: 4px;
-    }
-    .calendar .selected {
-      background: #2a7be4;
-      color: white;
-    }
-    @media (max-width: 600px) {
-      .card {
-        flex-direction: column;
-      }
-    }
-  </style>
+  <title>Добавить клиента</title>
+  <script type="module" src="./supabase.js"></script>
+  <script type="module">
+    import './supabase.js';
+
+    window.addEventListener("DOMContentLoaded", () => {
+      const form = document.querySelector("form");
+      form.addEventListener("submit", async (e) => {
+        e.preventDefault();
+        const name = document.getElementById("name").value;
+        const phone = document.getElementById("phone").value;
+
+        if (!window.supabase) {
+          alert("Supabase не инициализирован");
+          return;
+        }
+
+        const { error } = await window.supabase.from("clients").insert([{ name, phone }]);
+        if (error) {
+          alert("Ошибка при добавлении: " + error.message);
+        } else {
+          alert("Клиент добавлен!");
+          form.reset();
+        }
+      });
+    });
+  </script>
 </head>
 <body>
-  <div class="container">
-    <h1>МЕБЕЛЬ</h1>
-    <h2>Заказы</h2>
-    <table>
-      <thead>
-        <tr>
-          <th>Клиент</th><th>Проект</th><th>Статус</th><th>Сдача</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr><td>Тамара Коген</td><td>Кухня белая</td><td><div class="status"><div class="dot new"></div>Новый</div></td><td>15.08.2025</td></tr>
-        <tr><td>Михaйл Левин</td><td>В ожидании</td><td><div class="status"><div class="dot waiting"></div>В ожидании</div></td><td>20.08.2025</td></tr>
-        <tr><td>Гила Розен</td><td>Нище рюцТВ</td><td><div class="status"><div class="dot approved"></div>Утвержден</div></td><td>30.08.2025</td></tr>
-      </tbody>
-    </table>
-    <div class="card">
-      <div class="block">
-        <strong>Тамара Коген</strong><br/>
-        Проект: Кухня белая<br/>
-        Сдача: 15.08.2025<br/>
-        <button class="btn">Отправить в WhatsApp</button>
-      </div>
-      <div class="block">
-        <strong>Чертежи для утверждения</strong>
-        <div class="file-row">
-          <span>📄 Чертеж.pdf</span>
-          <button class="btn">Утвердить</button>
-        </div>
-      </div>
-      <div class="block">
-        <strong>Предложенные даты установки</strong>
-        <div class="calendar">
-          <div>10</div><div>11</div><div>12</div><div>13</div><div>14</div><div>15</div><div>16</div>
-          <div>17</div><div>18</div><div class="selected">19</div><div>20</div><div>21</div><div>22</div><div>23</div>
-          <div>24</div><div>25</div><div>26</div><div>27</div><div>28</div><div>29</div><div>30</div>
-        </div>
-      </div>
-    </div>
-  </div>
+  <h1>Добавить клиента</h1>
+  <form>
+    <input id="name" placeholder="Имя клиента" required />
+    <input id="phone" placeholder="Телефон" required />
+    <button type="submit">Добавить</button>
+  </form>
 </body>
 </html>

@@ -1,0 +1,41 @@
+
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Список клиентов</title>
+</head>
+<body>
+  <h1>Список клиентов</h1>
+  <ul id="client-list">Загрузка...</ul>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js"></script>
+  <script src="supabase.js"></script>
+  <script>
+    async function loadClients() {
+      const list = document.getElementById('client-list');
+      const { data, error } = await supabase.from('clients').select('*').order('created_at', { ascending: false });
+
+      if (error) {
+        list.innerHTML = '<li>Ошибка загрузки: ' + error.message + '</li>';
+        return;
+      }
+
+      if (data.length === 0) {
+        list.innerHTML = '<li>Нет клиентов</li>';
+        return;
+      }
+
+      list.innerHTML = '';
+      data.forEach(client => {
+        const item = document.createElement('li');
+        item.textContent = client.name + ' – ' + client.phone;
+        list.appendChild(item);
+      });
+    }
+
+    loadClients();
+  </script>
+</body>
+</html>
