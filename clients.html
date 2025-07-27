@@ -1,123 +1,102 @@
+
 <!DOCTYPE html>
 <html lang="ru">
 <head>
   <meta charset="UTF-8" />
-  <title>Список клиентов</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Клиенты | Vesta Home</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
   <style>
-    body { font-family: sans-serif; padding: 20px; }
-    table { border-collapse: collapse; width: 100%; margin-top: 10px; }
-    th, td { border: 1px solid #999; padding: 8px; text-align: left; }
-    th { background: #eee; }
-    input[type="text"] { margin: 5px; padding: 6px; width: 200px; }
-    select { padding: 6px; }
-    button { padding: 6px 10px; margin-left: 5px; }
-    nav { margin-bottom: 20px; }
-    a.client-link { color: blue; text-decoration: underline; cursor: pointer; }
+    body { background-color: #f8f9fa; }
+    .client-card {
+      border-radius: 16px;
+      padding: 20px;
+      background: white;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+      transition: 0.3s;
+    }
+    .client-card:hover {
+      transform: scale(1.02);
+      box-shadow: 0 6px 16px rgba(0,0,0,0.15);
+      cursor: pointer;
+    }
+    .top-bar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 20px;
+    }
+    .search-bar input {
+      border-radius: 12px;
+    }
   </style>
 </head>
-<body>
-  <nav><a href="home.html">На главную</a></nav>
+<body class="p-4">
+  <div class="container">
+    <div class="top-bar">
+      <h2>Список клиентов</h2>
+      <a href="add-client.html" class="btn btn-primary">➕ Добавить клиента</a>
+    </div>
 
-  <h1>Список клиентов</h1>
+    <div class="mb-3 search-bar">
+      <input type="text" id="searchInput" class="form-control" placeholder="Поиск по имени или телефону...">
+    </div>
 
-  <input id="nameInput" type="text" placeholder="Имя клиента" />
-  <input id="phoneInput" type="text" placeholder="Телефон клиента" />
-  <button id="addBtn">Добавить клиента</button>
+    <div class="row" id="clientsContainer">
+      <!-- Клиенты будут загружены сюда -->
+    </div>
+  </div>
 
-  <br/><br/>
+<script type="module">
+  import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm'
 
-  <label>Поиск:
-    <input id="searchInput" type="text" placeholder="Поиск..." />
-    <select id="searchBy">
-      <option value="name">по имени</option>
-      <option value="phone">по телефону</option>
-    </select>
-  </label>
+  const supabase = createClient(
+    'https://rincxoalnhfsnwgwxrfb.supabase.co',
+    'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InJpbmN4b2Fsbmhmc253Z3d4cmZiIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTM2MjE2MzMsImV4cCI6MjA2OTE5NzYzM30.95JhUW9uRbcHSkFCXyh40acSAAnJIj3nbUICQGqW32Y'
+  )
 
-  <table>
-    <thead>
-      <tr>
-        <th>ID</th>
-        <th>Имя</th>
-        <th>Телефон</th>
-        <th>Создан</th>
-        <th></th>
-      </tr>
-    </thead>
-    <tbody id="clientsBody"></tbody>
-  </table>
+  const container = document.getElementById("clientsContainer")
+  const searchInput = document.getElementById("searchInput")
+  let allClients = []
 
-  <script type="module">
-    import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm'
-
-    const supabase = createClient(
-      'https://rincxoalnhfsnwgwxrfb.supabase.co',
-      'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InJpbmN4b2Fsbmhmc253Z3d4cmZiIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTM2MjE2MzMsImV4cCI6MjA2OTE5NzYzM30.95JhUW9uRbcHSkFCXyh40acSAAnJIj3nbUICQGqW32Y'
-    );
-
-    const nameInput = document.getElementById('nameInput');
-    const phoneInput = document.getElementById('phoneInput');
-    const clientsTable = document.getElementById('clientsBody');
-    const searchInput = document.getElementById('searchInput');
-    const searchBy = document.getElementById('searchBy');
-
-    async function loadClients() {
-      let { data: clients, error } = await supabase.from('clients').select('*');
-      if (error) {
-        console.error('Ошибка загрузки клиентов:', error);
-        return;
-      }
-
-      clients.sort((a, b) => a.name.localeCompare(b.name));
-      displayClients(clients);
+  async function loadClients() {
+    const { data, error } = await supabase.from("clients").select("*")
+    if (error) {
+      container.innerHTML = "<p>Ошибка загрузки данных.</p>"
+      return
     }
 
-    function displayClients(clients) {
-      clientsTable.innerHTML = '';
-      clients.forEach(client => {
-        const row = document.createElement('tr');
-        row.innerHTML = `
-          <td>${client.id}</td>
-          <td><a class="client-link" href="client.html?id=${client.id}">${client.name}</a></td>
-          <td>${client.phone}</td>
-          <td>${new Date(client.created_at).toLocaleString()}</td>
-          <td><button class="delete-button" onclick="deleteClient(${client.id})">Удалить</button></td>
-        `;
-        clientsTable.appendChild(row);
-      });
-    }
+    allClients = data.sort((a, b) => a.name.localeCompare(b.name, 'ru'))
 
-    document.getElementById('addBtn').addEventListener('click', async () => {
-      const name = nameInput.value.trim();
-      const phone = phoneInput.value.trim();
-      if (!name || !phone) return alert("Введите имя и телефон");
+    renderClients(allClients)
+  }
 
-      await supabase.from('clients').insert([{ name, phone }]);
-      nameInput.value = '';
-      phoneInput.value = '';
-      await loadClients();
-    });
+  function renderClients(list) {
+    container.innerHTML = ""
+    list.forEach(client => {
+      const div = document.createElement("div")
+      div.className = "col-md-4 mb-4"
+      div.innerHTML = `
+        <div class="client-card" onclick="location.href='client.html?id=${client.id}'">
+          <h5>${client.name}</h5>
+          <p>📞 ${client.phone}</p>
+          <small>🕓 ${client.created_at?.split('T')[0]}</small>
+        </div>
+      `
+      container.appendChild(div)
+    })
+  }
 
-    window.deleteClient = async (id) => {
-      if (!confirm("Вы точно хотите удалить этого клиента?")) return;
-      const { error } = await supabase.from('clients').delete().eq('id', id);
-      if (error) {
-        alert("Ошибка удаления: " + error.message);
-      } else {
-        await loadClients();
-      }
-    };
+  searchInput.addEventListener("input", () => {
+    const query = searchInput.value.toLowerCase()
+    const filtered = allClients.filter(c =>
+      c.name.toLowerCase().includes(query) ||
+      c.phone.toLowerCase().includes(query)
+    )
+    renderClients(filtered)
+  })
 
-    searchInput.addEventListener('input', async () => {
-      const term = searchInput.value.trim().toLowerCase();
-      const by = searchBy.value;
-      let { data: clients } = await supabase.from('clients').select('*');
-      clients.sort((a, b) => a.name.localeCompare(b.name));
-      const filtered = clients.filter(c => (c[by] || '').toLowerCase().includes(term));
-      displayClients(filtered);
-    });
-
-    loadClients();
-  </script>
+  loadClients()
+</script>
 </body>
 </html>
