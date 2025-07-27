@@ -39,7 +39,6 @@
       const { data, error } = await supabase
         .from('clients')
         .select('*')
-        .order('id', { ascending: false })
 
       const tableBody = document.getElementById('clients-table-body')
       tableBody.innerHTML = ''
@@ -48,6 +47,9 @@
         console.error('Ошибка загрузки:', error.message)
         return
       }
+
+      // Сортировка по имени (любой язык)
+      data.sort((a, b) => a.name.localeCompare(b.name))
 
       data.forEach(client => {
         const row = document.createElement('tr')
