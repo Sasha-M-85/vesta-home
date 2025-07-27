@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <title>МЕБЕЛЬ</title>
+  <link href="https://fonts.googleapis.com/css2?family=Alef&display=swap" rel="stylesheet">
+  <style>
+    body {
+      font-family: 'Alef', sans-serif;
+      margin: 0;
+      padding: 0;
+      background-color: #f8f9fa;
+    }
+    header {
+      background-color: #fff;
+      padding: 1rem 2rem;
+      font-size: 2rem;
+      font-weight: bold;
+      color: #0056b3;
+    }
+    nav {
+      background-color: #f0f0f0;
+      padding: 1rem 2rem;
+    }
+    nav a {
+      margin-right: 2rem;
+      text-decoration: none;
+      font-weight: bold;
+      color: #007bff;
+    }
+    nav a:hover {
+      text-decoration: underline;
+    }
+    .container {
+      padding: 2rem;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 2rem;
+    }
+    th, td {
+      padding: 1rem;
+      text-align: left;
+      border-bottom: 1px solid #dee2e6;
+    }
+    .status-dot {
+      height: 10px;
+      width: 10px;
+      border-radius: 50%;
+      display: inline-block;
+      margin-right: 0.5rem;
+    }
+    .new { background-color: red; }
+    .pending { background-color: orange; }
+    .approved { background-color: green; }
+    .section {
+      display: flex;
+      gap: 1rem;
+      margin-top: 2rem;
+    }
+    .card {
+      background-color: white;
+      padding: 1rem;
+      border-radius: 8px;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+      flex: 1;
+    }
+    button {
+      background-color: #007bff;
+      color: white;
+      border: none;
+      padding: 0.5rem 1rem;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+  </style>
+</head>
+<body>
+  <header>МЕБЕЛЬ</header>
+  <nav>
+    <a href="clients.html">Клиенты</a>
+  </nav>
+  <div class="container">
+    <h2>Заказы</h2>
+    <table>
+      <thead>
+        <tr>
+          <th>Клиент</th>
+          <th>Проект</th>
+          <th>Статус</th>
+          <th>Сдача</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Тамара Коген</td>
+          <td>Кухня белая</td>
+          <td><span class="status-dot new"></span>Новый</td>
+          <td>15.08.2025</td>
+        </tr>
+        <tr>
+          <td>Михаил Левин</td>
+          <td>В ожидании</td>
+          <td><span class="status-dot pending"></span>В ожидании</td>
+          <td>20.08.2025</td>
+        </tr>
+        <tr>
+          <td>Гила Розен</td>
+          <td>Ниша рюцТВ</td>
+          <td><span class="status-dot approved"></span>Утвержден</td>
+          <td>30.08.2025</td>
+        </tr>
+      </tbody>
+    </table>
+    <div class="section">
+      <div class="card">
+        <b>Тамара Коген</b><br>
+        Проект: Кухня белая<br>
+        Сдача: 15.08.2025<br><br>
+        <button>Отправить в WhatsApp</button>
+      </div>
+      <div class="card">
+        <b>Чертежи для утверждения</b><br><br>
+        📄 Чертеж.pdf<br><br>
+        <button>Утвердить</button>
+      </div>
+      <div class="card">
+        <b>Предложенные даты установки</b><br><br>
+        📄 Чертеж.pdf<br><br>
+        <div style="display: grid; grid-template-columns: repeat(7, 1fr); gap: 0.5rem;">
+          <button>10</button><button>11</button><button>12</button><button>13</button><button>14</button><button>15</button><button>16</button>
+          <button>17</button><button>18</button><button style="background:#0056b3">19</button><button>20</button><button>21</button><button>22</button><button>23</button>
+          <button>24</button><button>25</button><button>26</button><button>27</button><button>28</button><button>29</button><button>30</button>
+        </div><br>
+        <button>Утвердить</button>
+      </div>
+    </div>
+  </div>
+</body>
+</html>
