@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <title>Клиенты</title>
+</head>
+<body>
+  <h2>Список клиентов</h2>
+
+  <form onsubmit="addClient(); return false;" style="margin-bottom: 20px;">
+    <input type="text" id="name" placeholder="Имя клиента" required>
+    <input type="text" id="phone" placeholder="Телефон клиента" required>
+    <button type="submit">Добавить клиента</button>
+  </form>
+
+  <table border="1" style="width:100%; border-collapse: collapse;">
+    <thead>
+      <tr>
+        <th>ID</th>
+        <th>Имя</th>
+        <th>Телефон</th>
+        <th>Создан</th>
+      </tr>
+    </thead>
+    <tbody id="clients-table-body">
+      <!-- Данные появятся здесь -->
+    </tbody>
+  </table>
+
+  <script type="module">
+    import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm'
+
+    const supabaseUrl = 'https://rincxoalnhfsnwgwxrfb.supabase.co'
+    const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InJpbmN4b2Fsbmhmc253Z3d4cmZiIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTM2MjE2MzMsImV4cCI6MjA2OTE5NzYzM30.95JhUW9uRbcHSkFCXyh40acSAAnJIj3nbUICQGqW32Y'
+
+    const supabase = createClient(supabaseUrl, supabaseKey)
+
+    async function loadClients() {
+      const { data, error } = await supabase
+        .from('clients')
+        .select('*')
+        .order('id', { ascending: false })
+
+      const tableBody = document.getElementById('clients-table-body')
+      tableBody.innerHTML = ''
+
+      if (error) {
+        console.error('Ошибка загрузки:', error.message)
+        return
+      }
+
+      data.forEach(client => {
+        const row = document.createElement('tr')
+        row.innerHTML = `
+          <td>${client.id}</td>
+          <td>${client.name}</td>
+          <td>${client.phone}</td>
+          <td>${new Date(client.created_at).toLocaleString()}</td>
+        `
+        tableBody.appendChild(row)
+      })
+    }
+
+    async function addClient() {
+      const name = document.getElementById('name').value.trim()
+      const phone = document.getElementById('phone').value.trim()
+
+      if (!name || !phone) {
+        alert('Пожалуйста, заполните все поля')
+        return
+      }
+
+      const { error } = await supabase
+        .from('clients')
+        .insert([{ name, phone }])
+
+      if (error) {
+        alert('Ошибка добавления: ' + error.message)
+      } else {
+        document.getElementById('name').value = ''
+        document.getElementById('phone').value = ''
+        loadClients()
+      }
+    }
+
+    loadClients()
+    window.addClient = addClient
+  </script>
+</body>
+</html>
