@@ -29,7 +29,13 @@
       <strong>Создан:</strong> <span id="client-created"></span>
     </div>
 
+    
     <button id="edit-btn" class="btn btn-primary mb-3">Редактировать данные</button>
+    
+    <button id="save-btn" class="btn btn-success mb-3 ms-2" style="display:none;">Сохранить изменения</button>
+    <button id="delete-btn" class="btn btn-danger mb-3 ms-2" style="display:none;">Удалить клиента</button>
+    
+    
 
     <div class="mb-3">
       <label class="form-label">Путь к папке Dropbox</label>
@@ -107,6 +113,64 @@
   })
 
   loadClient()
+
+
+  const deleteBtn = document.getElementById('delete-btn');
+
+  document.getElementById('edit-btn').addEventListener('click', () => {
+    deleteBtn.style.display = 'inline-block';
+  });
+
+  deleteBtn.addEventListener('click', async () => {
+    if (!confirm('Вы уверены, что хотите удалить этого клиента?')) return;
+
+    const { error } = await supabase
+      .from('clients')
+      .delete()
+      .eq('id', clientId);
+
+    if (error) {
+      alert('Ошибка при удалении клиента.');
+      console.error(error);
+      return;
+    }
+
+    alert('Клиент удалён.');
+    window.location.href = 'clients.html'; // возвращаемся к списку
+  });
+
+
+  const saveBtn = document.getElementById('save-btn');
+  const nameInput = document.getElementById('client-name');
+  const phoneInput = document.getElementById('client-phone');
+
+  document.getElementById('edit-btn').addEventListener('click', () => {
+    nameInput.disabled = false;
+    phoneInput.disabled = false;
+    saveBtn.style.display = 'inline-block';
+  });
+
+  saveBtn.addEventListener('click', async () => {
+    const updatedName = nameInput.value.trim();
+    const updatedPhone = phoneInput.value.trim();
+
+    const { error } = await supabase
+      .from('clients')
+      .update({ name: updatedName, phone: updatedPhone })
+      .eq('id', clientId);
+
+    if (error) {
+      alert('Ошибка сохранения данных.');
+      console.error(error);
+      return;
+    }
+
+    nameInput.disabled = true;
+    phoneInput.disabled = true;
+    saveBtn.style.display = 'none';
+    alert('Данные успешно сохранены!');
+  });
+
 </script>
 
 </body>
