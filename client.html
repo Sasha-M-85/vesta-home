@@ -150,7 +150,8 @@
     saveBtn.style.display = 'inline-block';
   });
 
-  saveBtn.addEventListener('click', async () => {
+  saveBtn.addEventListener('click', async (e) => {
+      e.preventDefault();
     const updatedName = nameInput.value.trim();
     const updatedPhone = phoneInput.value.trim();
 
@@ -181,7 +182,8 @@
     document.getElementById('client-name').disabled = false;
     document.getElementById('client-phone').disabled = false;
 
-    saveBtn.addEventListener('click', async () => {
+    saveBtn.addEventListener('click', async (e) => {
+      e.preventDefault();
       const name = nameInput.value.trim();
       const phone = phoneInput.value.trim();
       if (!name || !phone) {
