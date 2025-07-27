@@ -5,134 +5,72 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Клиент</title>
-  <link href="https://fonts.googleapis.com/css2?family=Rubik&display=swap" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" />
   <style>
-    body {
-      font-family: 'Rubik', sans-serif;
-      background-color: #f7f7f7;
-      margin: 0;
-      padding: 2rem;
-      color: #333;
-    }
-    .container {
-      max-width: 800px;
-      margin: 0 auto;
-      background-color: white;
-      border-radius: 12px;
-      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-      padding: 2rem;
-    }
-    h1 {
-      font-size: 2rem;
-      margin-bottom: 1rem;
-    }
-    .info {
-      margin-bottom: 2rem;
-    }
-    .info div {
-      margin-bottom: 0.5rem;
-    }
-    .section {
-      margin-bottom: 2rem;
-    }
-    label {
-      font-weight: 500;
-    }
-    input[type="text"] {
-      width: 100%;
-      padding: 0.5rem;
-      margin-top: 0.25rem;
-      border-radius: 6px;
-      border: 1px solid #ccc;
-      box-sizing: border-box;
-    }
-    button {
-      padding: 0.5rem 1rem;
-      background-color: #6a5acd;
-      color: white;
-      border: none;
-      border-radius: 6px;
-      cursor: pointer;
-      margin-top: 0.5rem;
-    }
-    button:hover {
-      background-color: #5945c0;
-    }
-    .files {
-      border: 1px solid #ddd;
-      padding: 1rem;
-      border-radius: 8px;
-      background: #fafafa;
-    }
-    .back-link {
-      display: inline-block;
-      margin-top: 2rem;
-      text-decoration: none;
-      color: #6a5acd;
-    }
+    body { padding: 2rem; font-family: sans-serif; }
+    .readonly input { background-color: #f8f9fa; border: none; }
   </style>
 </head>
 <body>
   <div class="container">
-    <h1>Клиент: <span id="clientName">Имя клиента</span></h1>
+    <h2 id="client-title">Клиент: Имя клиента</h2>
 
-    <div class="info">
-      <div>
-        <label for="editName">Имя</label>
-        <input type="text" id="editName" value="" disabled />
-      </div>
-      <div>
-        <label for="editPhone">Телефон</label>
-        <input type="text" id="editPhone" value="" disabled />
-      </div>
-      <div><strong>Создан:</strong> <span id="clientCreated">2025-07-27</span></div>
-      <button onclick="enableEditMode()">Редактировать данные</button>
-      <button onclick="saveClientData()" id="saveBtn" style="display:none">Сохранить изменения</button>
+    <div class="mb-3">
+      <label class="form-label">Имя</label>
+      <input id="client-name" class="form-control" disabled />
     </div>
 
-    <div class="section">
-      <label for="dropboxPath">Путь к папке Dropbox</label>
-      <input type="text" id="dropboxPath" placeholder="/clients/ivanov" />
-      <button onclick="selectDropboxFolder()">Выбрать папку</button>
+    <div class="mb-3">
+      <label class="form-label">Телефон</label>
+      <input id="client-phone" class="form-control" disabled />
     </div>
 
-    <div class="section">
-      <h3>Файлы клиента</h3>
-      <div class="files" id="fileList">
-        <p>Нет файлов</p>
-      </div>
+    <div class="mb-3">
+      <strong>Создан:</strong> <span id="client-created"></span>
     </div>
 
-    <a href="clients.html" class="back-link">← Назад к списку клиентов</a>
+    <button id="edit-btn" class="btn btn-primary mb-3">Редактировать данные</button>
+
+    <div class="mb-3">
+      <label class="form-label">Путь к папке Dropbox</label>
+      <input id="client-dropbox-path" class="form-control" />
+      <button class="btn btn-secondary mt-2">Выбрать папку</button>
+    </div>
+
+    <div class="mb-4">
+      <h5>Файлы клиента</h5>
+      <div id="client-files" class="border p-3 bg-light">Нет файлов</div>
+    </div>
+
+    <a href="clients.html" class="btn btn-link">&larr; Назад к списку клиентов</a>
   </div>
 
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js"></script>
   <script>
-    function selectDropboxFolder() {
-      const path = prompt("Введите путь к папке Dropbox:", "/clients/example");
-      if (path) {
-        document.getElementById('dropboxPath').value = path;
-        document.getElementById('fileList').innerHTML = `
-          <ul>
-            <li><a href="#">чертёж.pdf</a></li>
-            <li><a href="#">договор.docx</a></li>
-          </ul>`;
+    const SUPABASE_URL = 'https://rincxoalnhfsnwgwxrfb.supabase.co';
+    const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InJpbmN4b2Fsbmhmc253Z3d4cmZiIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTM2MjE2MzMsImV4cCI6MjA2OTE5NzYzM30.95JhUW9uRbcHSkFCXyh40acSAAnJIj3nbUICQGqW32Y';
+    const supabase = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+
+    const clientId = new URLSearchParams(window.location.search).get('id');
+
+    async function loadClient() {
+      const { data, error } = await supabase.from('clients').select('*').eq('id', clientId).single();
+      if (error) {
+        console.error('Ошибка загрузки клиента:', error);
+        return;
       }
+      document.getElementById('client-name').value = data.name;
+      document.getElementById('client-phone').value = data.phone;
+      document.getElementById('client-created').innerText = data.created_at?.split('T')[0];
+      document.getElementById('client-title').innerText = `Клиент: ${data.name}`;
     }
 
-    function enableEditMode() {
-      document.getElementById("editName").disabled = false;
-      document.getElementById("editPhone").disabled = false;
-      document.getElementById("saveBtn").style.display = "inline-block";
-    }
+    document.getElementById('edit-btn').addEventListener('click', () => {
+      document.getElementById('client-name').disabled = false;
+      document.getElementById('client-phone').disabled = false;
+    });
 
-    function saveClientData() {
-      const name = document.getElementById("editName").value;
-      const phone = document.getElementById("editPhone").value;
-      alert("Сохранено: " + name + ", " + phone);
-      document.getElementById("editName").disabled = true;
-      document.getElementById("editPhone").disabled = true;
-      document.getElementById("saveBtn").style.display = "none";
-    }
+    loadClient();
   </script>
 </body>
 </html>
