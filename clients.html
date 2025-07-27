@@ -12,7 +12,7 @@
     select { padding: 6px; }
     button { padding: 6px 10px; margin-left: 5px; }
     nav { margin-bottom: 20px; }
-    .delete-button { color: red; cursor: pointer; }
+    a.client-link { color: blue; text-decoration: underline; cursor: pointer; }
   </style>
 </head>
 <body>
@@ -78,7 +78,7 @@
         const row = document.createElement('tr');
         row.innerHTML = `
           <td>${client.id}</td>
-          <td>${client.name}</td>
+          <td><a class="client-link" href="client.html?id=${client.id}">${client.name}</a></td>
           <td>${client.phone}</td>
           <td>${new Date(client.created_at).toLocaleString()}</td>
           <td><button class="delete-button" onclick="deleteClient(${client.id})">Удалить</button></td>
