@@ -193,9 +193,9 @@
         .from('clients')
         .insert([{ name, phone }]);
 
-      if (error) {
+      if (error || !data) {
+        console.error('Ошибка при создании:', error);
         alert('Ошибка при создании клиента.');
-        console.error(error);
         return;
       }
 
