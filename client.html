@@ -191,7 +191,19 @@
         return;
       }
 
-      const { data, error } = await supabase
+      
+    // Проверка: есть ли клиент с таким именем или телефоном
+    const { data: existing } = await supabase
+      .from('clients')
+      .select('*')
+      .or(`name.eq.${name},phone.eq.${phone}`);
+
+    if (existing.length > 0) {
+      alert("Клиент с таким именем или телефоном уже существует");
+      return;
+    }
+
+    const { data, error } = await supabase
         .from('clients')
         .insert([{ name, phone }]);
 
