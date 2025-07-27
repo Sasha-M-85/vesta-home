@@ -6,6 +6,13 @@
 </head>
 <body>
   <h2>Список клиентов</h2>
+
+  <form onsubmit="addClient(); return false;" style="margin-bottom: 20px;">
+    <input type="text" id="name" placeholder="Имя клиента" required>
+    <input type="text" id="phone" placeholder="Телефон клиента" required>
+    <button type="submit">Добавить клиента</button>
+  </form>
+
   <table border="1" style="width:100%; border-collapse: collapse;">
     <thead>
       <tr>
@@ -34,13 +41,13 @@
         .select('*')
         .order('id', { ascending: false })
 
-      if (error) {
-        console.error('Ошибка при загрузке клиентов:', error.message)
-        return
-      }
-
       const tableBody = document.getElementById('clients-table-body')
       tableBody.innerHTML = ''
+
+      if (error) {
+        console.error('Ошибка загрузки:', error.message)
+        return
+      }
 
       data.forEach(client => {
         const row = document.createElement('tr')
@@ -54,7 +61,30 @@
       })
     }
 
+    async function addClient() {
+      const name = document.getElementById('name').value.trim()
+      const phone = document.getElementById('phone').value.trim()
+
+      if (!name || !phone) {
+        alert('Пожалуйста, заполните все поля')
+        return
+      }
+
+      const { error } = await supabase
+        .from('clients')
+        .insert([{ name, phone }])
+
+      if (error) {
+        alert('Ошибка добавления: ' + error.message)
+      } else {
+        document.getElementById('name').value = ''
+        document.getElementById('phone').value = ''
+        loadClients()
+      }
+    }
+
     loadClients()
+    window.addClient = addClient
   </script>
 </body>
 </html>
