@@ -1,72 +1,60 @@
-
 <!DOCTYPE html>
 <html lang="ru">
 <head>
   <meta charset="UTF-8">
   <title>Клиенты</title>
-  <script src="supabase.js"></script>
-  <style>
-    body { font-family: sans-serif; padding: 20px; }
-    h1 { margin-bottom: 20px; }
-    input { margin-right: 10px; padding: 5px; }
-    button { padding: 5px 10px; }
-    ul { margin-top: 20px; padding-left: 0; list-style: none; }
-    li { padding: 5px 0; border-bottom: 1px solid #ccc; }
-    .nav { margin-bottom: 20px; }
-  </style>
 </head>
 <body>
-  <div class="nav">
-    <a href="home.html">🏠 Главная</a>
-  </div>
-  <h1>Клиенты</h1>
-  <input type="text" id="nameInput" placeholder="Имя клиента">
-  <input type="text" id="phoneInput" placeholder="Телефон">
-  <button onclick="addClient()">Добавить</button>
+  <h2>Список клиентов</h2>
+  <table border="1" style="width:100%; border-collapse: collapse;">
+    <thead>
+      <tr>
+        <th>ID</th>
+        <th>Имя</th>
+        <th>Телефон</th>
+        <th>Создан</th>
+      </tr>
+    </thead>
+    <tbody id="clients-table-body">
+      <!-- Данные появятся здесь -->
+    </tbody>
+  </table>
 
-  <ul id="clients-list"></ul>
+  <script type="module">
+    import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm'
 
-  <script>
-    const supabaseUrl = 'https://rincxoalnhfsnwgwxrfb.supabase.co';
-    const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InJpbmN4b2Fsbmhmc253Z3d4cmZiIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTM2MjE2MzMsImV4cCI6MjA2OTE5NzYzM30.95JhUW9uRbcHSkFCXyh40acSAAnJIj3nbUICQGqW32Y';
-    const supabase = window.supabase.createClient(supabaseUrl, supabaseKey);
+    const supabaseUrl = 'https://rincxoalnhfsnwgwxrfb.supabase.co'
+    const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InJpbmN4b2Fsbmhmc253Z3d4cmZiIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTM2MjE2MzMsImV4cCI6MjA2OTE5NzYzM30.95JhUW9uRbcHSkFCXyh40acSAAnJIj3nbUICQGqW32Y'
+
+    const supabase = createClient(supabaseUrl, supabaseKey)
 
     async function loadClients() {
-      const { data, error } = await supabase.from('clients').select('*');
+      const { data, error } = await supabase
+        .from('clients')
+        .select('*')
+        .order('id', { ascending: false })
+
       if (error) {
-        console.error('Ошибка загрузки клиентов:', error);
-        alert("Ошибка загрузки клиентов");
-        return;
+        console.error('Ошибка при загрузке клиентов:', error.message)
+        return
       }
 
-      const list = document.getElementById('clients-list');
-      list.innerHTML = '';
+      const tableBody = document.getElementById('clients-table-body')
+      tableBody.innerHTML = ''
+
       data.forEach(client => {
-        const li = document.createElement('li');
-        li.textContent = `${client.name} — ${client.phone}`;
-        list.appendChild(li);
-      });
+        const row = document.createElement('tr')
+        row.innerHTML = `
+          <td>${client.id}</td>
+          <td>${client.name}</td>
+          <td>${client.phone}</td>
+          <td>${new Date(client.created_at).toLocaleString()}</td>
+        `
+        tableBody.appendChild(row)
+      })
     }
 
-    async function addClient() {
-      const name = document.getElementById('nameInput').value.trim();
-      const phone = document.getElementById('phoneInput').value.trim();
-
-      if (!name || !phone) return alert("Заполните имя и телефон");
-
-      const { error } = await supabase.from('clients').insert([{ name, phone }]);
-      if (error) {
-        console.error('Ошибка добавления клиента:', error);
-        alert("Ошибка при добавлении");
-        return;
-      }
-
-      document.getElementById('nameInput').value = '';
-      document.getElementById('phoneInput').value = '';
-      await loadClients();
-    }
-
-    window.onload = loadClients;
+    loadClients()
   </script>
 </body>
 </html>
