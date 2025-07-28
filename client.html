@@ -1,93 +1,134 @@
-
 <!DOCTYPE html>
 <html lang="ru">
 <head>
-    <meta charset="UTF-8">
-    <title>Клиент</title>
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
-    <script src="https://kit.fontawesome.com/a2e0f1f390.js" crossorigin="anonymous"></script>
-    <style>
-        body { padding: 20px; }
-    </style>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Клиент</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js"></script>
+  <script src="supabase.js"></script>
 </head>
-<body>
-    <div class="container">
-        <h2 class="mb-4"><i class="fa-solid fa-user"></i> Клиент: Имя клиента</h2>
+<body class="p-4">
+  <div class="container">
+    <h2 class="mb-4">Клиент: <span id="client-name">Имя клиента</span></h2>
 
-        <!-- Контактные данные -->
-        <div class="accordion mb-3" id="accordionClient">
-          <div class="accordion-item">
-            <h2 class="accordion-header" id="headingContact">
-              <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseContact" aria-expanded="true" aria-controls="collapseContact">
-                <i class="fa-solid fa-address-book me-2"></i> Контактные данные
-              </button>
-            </h2>
-            <div id="collapseContact" class="accordion-collapse collapse show" aria-labelledby="headingContact" data-bs-parent="#accordionClient">
-              <div class="accordion-body">
-                <div class="mb-3">
-                    <label class="form-label">Имя *</label>
-                    <input type="text" class="form-control" id="name" required>
-                </div>
-                <div class="mb-3">
-                    <label class="form-label">Телефон *</label>
-                    <input type="text" class="form-control" id="phone" required>
-                </div>
-                <div class="mb-3">
-                    <label class="form-label">Дополнительный телефон</label>
-                    <input type="text" class="form-control" id="phone2">
-                </div>
-                <div class="mb-3">
-                    <label class="form-label">Email</label>
-                    <input type="email" class="form-control" id="email">
-                </div>
+    <form id="client-form">
+      <div class="accordion mb-3" id="accordionPanelsStayOpen">
+        <div class="accordion-item">
+          <h2 class="accordion-header">
+            <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#contactPanel">
+              Контактные данные
+            </button>
+          </h2>
+          <div id="contactPanel" class="accordion-collapse collapse show">
+            <div class="accordion-body">
+              <div class="mb-3">
+                <label for="name" class="form-label">Имя *</label>
+                <input type="text" class="form-control" id="name" required>
               </div>
-            </div>
-          </div>
-
-          <!-- Адрес -->
-          <div class="accordion-item">
-            <h2 class="accordion-header" id="headingAddress">
-              <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseAddress" aria-expanded="false" aria-controls="collapseAddress">
-                <i class="fa-solid fa-location-dot me-2"></i> Адрес
-              </button>
-            </h2>
-            <div id="collapseAddress" class="accordion-collapse collapse" aria-labelledby="headingAddress" data-bs-parent="#accordionClient">
-              <div class="accordion-body">
-                <div class="mb-3">
-                    <label class="form-label">Город</label>
-                    <input type="text" class="form-control" id="city">
-                </div>
-                <div class="mb-3">
-                    <label class="form-label">Улица, дом, квартира</label>
-                    <input type="text" class="form-control" id="address">
-                </div>
+              <div class="mb-3">
+                <label for="phone" class="form-label">Телефон *</label>
+                <input type="text" class="form-control" id="phone" required>
               </div>
-            </div>
-          </div>
-
-          <!-- Заметки -->
-          <div class="accordion-item">
-            <h2 class="accordion-header" id="headingNotes">
-              <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseNotes" aria-expanded="false" aria-controls="collapseNotes">
-                <i class="fa-solid fa-note-sticky me-2"></i> Заметки
-              </button>
-            </h2>
-            <div id="collapseNotes" class="accordion-collapse collapse" aria-labelledby="headingNotes" data-bs-parent="#accordionClient">
-              <div class="accordion-body">
-                <textarea class="form-control" id="notes" rows="4"></textarea>
+              <div class="mb-3">
+                <label for="phone2" class="form-label">Дополнительный телефон</label>
+                <input type="text" class="form-control" id="phone2">
+              </div>
+              <div class="mb-3">
+                <label for="email" class="form-label">Email</label>
+                <input type="email" class="form-control" id="email">
               </div>
             </div>
           </div>
         </div>
 
-        <div class="d-flex gap-2">
-            <button class="btn btn-primary" id="saveBtn"><i class="fa-solid fa-floppy-disk"></i> Сохранить</button>
-            <button class="btn btn-danger" id="deleteBtn"><i class="fa-solid fa-trash"></i> Удалить</button>
-            <a href="clients.html" class="btn btn-secondary"><i class="fa-solid fa-arrow-left"></i> Назад к списку</a>
+        <div class="accordion-item">
+          <h2 class="accordion-header">
+            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#addressPanel">
+              Адрес
+            </button>
+          </h2>
+          <div id="addressPanel" class="accordion-collapse collapse">
+            <div class="accordion-body">
+              <textarea class="form-control" id="address" rows="2"></textarea>
+            </div>
+          </div>
         </div>
-    </div>
 
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-    <!-- Логика Supabase подключается отдельно -->
+        <div class="accordion-item">
+          <h2 class="accordion-header">
+            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#notesPanel">
+              Заметки
+            </button>
+          </h2>
+          <div id="notesPanel" class="accordion-collapse collapse">
+            <div class="accordion-body">
+              <textarea class="form-control" id="notes" rows="2"></textarea>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="mb-3">
+        <button type="submit" class="btn btn-primary">Сохранить</button>
+        <button type="button" class="btn btn-danger" id="delete-btn">Удалить</button>
+        <a href="clients.html" class="btn btn-secondary">Назад к списку</a>
+      </div>
+    </form>
+  </div>
+
+  <script>
+    const urlParams = new URLSearchParams(window.location.search);
+    const clientId = urlParams.get('id');
+    const form = document.getElementById('client-form');
+    const nameField = document.getElementById('name');
+    const phoneField = document.getElementById('phone');
+    const phone2Field = document.getElementById('phone2');
+    const emailField = document.getElementById('email');
+    const addressField = document.getElementById('address');
+    const notesField = document.getElementById('notes');
+
+    async function loadClient() {
+      if (!clientId) return;
+      const { data, error } = await supabase.from('clients').select().eq('id', clientId).single();
+      if (data) {
+        document.getElementById('client-name').textContent = data.name;
+        nameField.value = data.name;
+        phoneField.value = data.phone;
+        phone2Field.value = data.phone2 || '';
+        emailField.value = data.email || '';
+        addressField.value = data.address || '';
+        notesField.value = data.notes || '';
+      }
+    }
+
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const payload = {
+        name: nameField.value,
+        phone: phoneField.value,
+        phone2: phone2Field.value,
+        email: emailField.value,
+        address: addressField.value,
+        notes: notesField.value
+      };
+      if (clientId) {
+        await supabase.from('clients').update(payload).eq('id', clientId);
+      } else {
+        await supabase.from('clients').insert([payload]);
+      }
+      window.location.href = "clients.html";
+    });
+
+    document.getElementById('delete-btn').addEventListener('click', async () => {
+      if (clientId && confirm("Удалить клиента?")) {
+        await supabase.from('clients').delete().eq('id', clientId);
+        window.location.href = "clients.html";
+      }
+    });
+
+    loadClient();
+  </script>
 </body>
 </html>
