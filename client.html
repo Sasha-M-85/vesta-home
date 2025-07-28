@@ -110,7 +110,8 @@
   async function loadClient() {
     if (!clientId) {
       enableInputs();
-      btnDelete.style.display = "none";
+      if (btnEdit) btnEdit.style.display = "none";
+      if (btnDelete) btnDelete.style.display = "none";
       return;
     }
     const { data, error } = await supabase.from("clients").select("*").eq("id", clientId).single();
@@ -119,16 +120,18 @@
       return;
     }
     for (const key in data) {
-      if (document.getElementById(key)) {
-        document.getElementById(key).value = data[key] || "";
+      const el = document.getElementById(key);
+      if (el) {
+        el.value = data[key] || "";
       }
     }
     clientTitle.innerText = data.name || "Без имени";
+    disableInputs();
   }
 
   async function saveClient() {
     const newData = {};
-    inputs.forEach((input) => newData[input.id] = input.value);
+    inputs.forEach((input) => newData[input.id] = input.value.trim());
 
     if (!newData.name || !newData.phone) {
       alert("Имя и телефон обязательны");
@@ -155,8 +158,8 @@
   document.addEventListener("DOMContentLoaded", () => {
     loadClient();
 
-    btnEdit.addEventListener("click", enableInputs);
-    btnSave.addEventListener("click", saveClient);
-    btnDelete.addEventListener("click", deleteClient);
+    if (btnEdit) btnEdit.addEventListener("click", enableInputs);
+    if (btnSave) btnSave.addEventListener("click", saveClient);
+    if (btnDelete) btnDelete.addEventListener("click", deleteClient);
   });
 </script>
