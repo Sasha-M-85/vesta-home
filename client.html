@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="ru">
 <head>
@@ -91,11 +92,11 @@
 
     async function loadClient() {
       if (!clientId) return;
-      const { data, error } = await supabase.from('clients').select().eq('id', clientId).single();
+      const { data, error } = await supabaseClient.from('clients').select().eq('id', clientId).single();
       if (data) {
         document.getElementById('client-name').textContent = data.name;
-        nameField.value = data.name;
-        phoneField.value = data.phone;
+        nameField.value = data.name || '';
+        phoneField.value = data.phone || '';
         phone2Field.value = data.phone2 || '';
         emailField.value = data.email || '';
         addressField.value = data.address || '';
@@ -114,16 +115,16 @@
         notes: notesField.value
       };
       if (clientId) {
-        await supabase.from('clients').update(payload).eq('id', clientId);
+        await supabaseClient.from('clients').update(payload).eq('id', clientId);
       } else {
-        await supabase.from('clients').insert([payload]);
+        await supabaseClient.from('clients').insert([payload]);
       }
       window.location.href = "clients.html";
     });
 
     document.getElementById('delete-btn').addEventListener('click', async () => {
       if (clientId && confirm("Удалить клиента?")) {
-        await supabase.from('clients').delete().eq('id', clientId);
+        await supabaseClient.from('clients').delete().eq('id', clientId);
         window.location.href = "clients.html";
       }
     });
