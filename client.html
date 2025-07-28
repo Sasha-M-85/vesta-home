@@ -1,224 +1,210 @@
 
 <!DOCTYPE html>
+
 <html lang="ru">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Клиент</title>
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" />
-  <style>
+<link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet"/>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Клиент</title>
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet"/>
+<style>
     body { padding: 2rem; font-family: sans-serif; }
     .readonly input { background-color: #f8f9fa; border: none; }
   </style>
-</head>
+<style>
+@media (max-width: 576px) {
+  h2#client-title {
+    font-size: 1.25rem;
+  }
+  .accordion-button {
+    font-size: 1rem;
+    padding: 0.75rem 1rem;
+  }
+  .form-label {
+    font-size: 0.9rem;
+  }
+  .form-control {
+    font-size: 0.95rem;
+  }
+  button.btn {
+    font-size: 0.95rem;
+    width: 100%;
+    margin-bottom: 0.5rem;
+  }
+}
+</style></head>
 <body>
-  <div class="container">
-    <h2 id="client-title">Клиент: Имя клиента</h2>
+<div class="container">
+<h2 id="client-title">Клиент: Имя клиента</h2>
 
-    <div class="mb-3">
-      <label class="form-label">Имя</label>
-      <input id="client-name" class="form-control" disabled />
-    </div>
+<div class="mb-3 d-flex gap-2">
+<button class="btn btn-primary" id="edit-btn">Редактировать</button>
+<button class="btn btn-success" id="save-btn" style="display:none;">Сохранить</button>
+<button class="btn btn-danger" id="delete-btn" style="display:none;">Удалить</button>
+</div>
+</div>
+<div class="accordion mb-4" id="clientAccordion">
+<div class="accordion-item">
+<h2 class="accordion-header" id="headingContact">
+<button aria-expanded="true" class="accordion-button" data-bs-target="#collapseContact" data-bs-toggle="collapse" type="button">
+<i class="bi bi-person-lines-fill me-2"></i>Контактные данные
+      </button>
+</h2>
+<div class="accordion-collapse collapse show" data-bs-parent="#clientAccordion" id="collapseContact">
+<div class="accordion-body">
+<div class="mb-3">
+<label class="form-label"><i class="bi bi-person-fill me-2"></i>Имя *</label>
+<input class="form-control" id="client-name" required=""/>
+</div>
+<div class="mb-3">
+<label class="form-label"><i class="bi bi-telephone-fill me-2"></i>Телефон *</label>
+<input class="form-control" id="client-phone" required=""/>
+</div>
+<div class="mb-3">
+<label class="form-label"><i class="bi bi-phone me-2"></i>Дополнительный телефон</label>
+<input class="form-control" id="client-phone2"/>
+</div>
+<div class="mb-3">
+<label class="form-label"><i class="bi bi-envelope-fill me-2"></i>Email</label>
+<input class="form-control" id="client-email"/>
+</div>
+</div>
+</div>
+</div>
+<div class="accordion-item">
+<h2 class="accordion-header" id="headingAddress">
+<button class="accordion-button collapsed" data-bs-target="#collapseAddress" data-bs-toggle="collapse" type="button">
+<i class="bi bi-geo-alt-fill me-2"></i>Адрес
+      </button>
+</h2>
+<div class="accordion-collapse collapse" data-bs-parent="#clientAccordion" id="collapseAddress">
+<div class="accordion-body">
+<div class="mb-3">
+<label class="form-label"><i class="bi bi-building me-2"></i>Город</label>
+<input class="form-control" id="client-city"/>
+</div>
+<div class="mb-3">
+<label class="form-label"><i class="bi bi-house-fill me-2"></i>Улица, дом, квартира</label>
+<input class="form-control" id="client-address"/>
+</div>
+</div>
+</div>
+</div>
+<div class="accordion-item">
+<h2 class="accordion-header" id="headingNotes">
+<button class="accordion-button collapsed" data-bs-target="#collapseNotes" data-bs-toggle="collapse" type="button">
+<i class="bi bi-stickies-fill me-2"></i>Заметки
+      </button>
+</h2>
+<div class="accordion-collapse collapse" data-bs-parent="#clientAccordion" id="collapseNotes">
+<div class="accordion-body">
+<textarea class="form-control" id="client-notes" rows="3"></textarea>
+</div>
+</div>
+</div>
+</div>
+<a class="btn btn-link" href="clients.html">← Назад к списку клиентов</a>
 
-    <div class="mb-3">
-      <label class="form-label">Телефон</label>
-      <input id="client-phone" class="form-control" disabled />
-    </div>
-
-    <div class="mb-3">
-      <strong>Создан:</strong> <span id="client-created"></span>
-    </div>
-
-    
-    <button id="edit-btn" class="btn btn-primary mb-3">Редактировать данные</button>
-    
-    <button id="save-btn" class="btn btn-success mb-3 ms-2" style="display:none;">Сохранить изменения</button>
-    <button id="delete-btn" class="btn btn-danger mb-3 ms-2" style="display:none;">Удалить клиента</button>
-    
-    
-
-    <div class="mb-3">
-      <label class="form-label">Путь к папке Dropbox</label>
-      <input id="client-dropbox-path" class="form-control" />
-      <button class="btn btn-secondary mt-2">Выбрать папку</button>
-    </div>
-
-    <div class="mb-4">
-      <h5>Файлы клиента</h5>
-      <div id="client-files" class="border p-3 bg-light">Нет файлов</div>
-    </div>
-
-    <a href="clients.html" class="btn btn-link">&larr; Назад к списку клиентов</a>
-  </div>
-
-  
-  <script>
-    const SUPABASE_URL = 'https://rincxoalnhfsnwgwxrfb.supabase.co';
-    const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InJpbmN4b2Fsbmhmc253Z3d4cmZiIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTM2MjE2MzMsImV4cCI6MjA2OTE5NzYzM30.95JhUW9uRbcHSkFCXyh40acSAAnJIj3nbUICQGqW32Y';
-    const supabase = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
-
-    const clientId = new URLSearchParams(window.location.search).get('id');
-
-    async function loadClient() {
-      const { data, error } = await supabase.from('clients').select('*').eq('id', clientId).single();
-      if (error) {
-        console.error('Ошибка загрузки клиента:', error);
-        return;
-      }
-      document.getElementById('client-name').value = data.name;
-      document.getElementById('client-phone').value = data.phone;
-      document.getElementById('client-created').innerText = data.created_at?.split('T')[0];
-      document.getElementById('client-title').innerText = `Клиент: ${data.name}`;
-    }
-
-    document.getElementById('edit-btn').addEventListener('click', () => {
-      document.getElementById('client-name').disabled = false;
-      document.getElementById('client-phone').disabled = false;
-    });
-
-    loadClient();
-  </script>
 
 <script type="module">
-  import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm'
+import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm'
 
-  const SUPABASE_URL = 'https://rincxoalnhfsnwgwxrfb.supabase.co'
-  const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InJpbmN4b2Fsbmhmc253Z3d4cmZiIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTM2MjE2MzMsImV4cCI6MjA2OTE5NzYzM30.95JhUW9uRbcHSkFCXyh40acSAAnJIj3nbUICQGqW32Y'
+const SUPABASE_URL = 'https://rincxoalnhfsnwgwxrfb.supabase.co'
+const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...'
+const supabase = createClient(SUPABASE_URL, SUPABASE_KEY)
 
-  const supabase = createClient(SUPABASE_URL, SUPABASE_KEY)
+const clientId = new URLSearchParams(window.location.search).get('id')
 
-  const clientId = new URLSearchParams(window.location.search).get('id')
+const nameField = document.getElementById('client-name')
+const phoneField = document.getElementById('client-phone')
+const phone2Field = document.getElementById('client-phone2')
+const emailField = document.getElementById('client-email')
+const cityField = document.getElementById('client-city')
+const addressField = document.getElementById('client-address')
+const notesField = document.getElementById('client-notes')
+const title = document.getElementById('client-title')
+const saveBtn = document.getElementById('save-btn')
+const deleteBtn = document.getElementById('delete-btn')
+const editBtn = document.getElementById('edit-btn')
 
-  async function loadClient() {
-    const { data, error } = await supabase
-      .from('clients')
-      .select('*')
-      .eq('id', clientId)
-      .single()
-
-    if (error) {
-      console.error('Ошибка загрузки клиента:', error)
-      return
-    }
-
-    document.getElementById('client-name').value = data.name
-    document.getElementById('client-phone').value = data.phone
-    document.getElementById('client-created').innerText = data.created_at?.split('T')[0]
-    document.getElementById('client-title').innerText = `Клиент: ${data.name}`
-  }
-
-  document.getElementById('edit-btn').addEventListener('click', () => {
-    document.getElementById('client-name').disabled = false
-    document.getElementById('client-phone').disabled = false
-  })
-
+if (clientId) {
   loadClient()
-
-
-  const deleteBtn = document.getElementById('delete-btn');
-
-  document.getElementById('edit-btn').addEventListener('click', () => {
-    deleteBtn.style.display = 'inline-block';
-  });
-
-  deleteBtn.addEventListener('click', async () => {
-    if (!confirm('Вы уверены, что хотите удалить этого клиента?')) return;
-
-    const { error } = await supabase
-      .from('clients')
-      .delete()
-      .eq('id', clientId);
-
-    if (error) {
-      alert('Ошибка при удалении клиента.');
-      console.error(error);
-      return;
-    }
-
-    alert('Клиент удалён.');
-    window.location.href = 'clients.html'; // возвращаемся к списку
-  });
-
-
-  const saveBtn = document.getElementById('save-btn');
-  const nameInput = document.getElementById('client-name');
-  const phoneInput = document.getElementById('client-phone');
-
-  document.getElementById('edit-btn').addEventListener('click', () => {
-    nameInput.disabled = false;
-    phoneInput.disabled = false;
-    saveBtn.style.display = 'inline-block';
-  });
-
+  editBtn.addEventListener('click', () => {
+    nameField.disabled = false
+    phoneField.disabled = false
+    phone2Field.disabled = false
+    emailField.disabled = false
+    cityField.disabled = false
+    addressField.disabled = false
+    notesField.disabled = false
+    saveBtn.style.display = 'inline-block'
+    deleteBtn.style.display = 'inline-block'
+  })
   saveBtn.addEventListener('click', async (e) => {
-      e.preventDefault();
-    const updatedName = nameInput.value.trim();
-    const updatedPhone = phoneInput.value.trim();
-
-    const { error } = await supabase
-      .from('clients')
-      .update({ name: updatedName, phone: updatedPhone })
-      .eq('id', clientId);
-
-    if (error) {
-      alert('Ошибка сохранения данных.');
-      console.error(error);
-      return;
+    e.preventDefault()
+    const updated = {
+      name: nameField.value.trim(),
+      phone: phoneField.value.trim(),
+      phone2: phone2Field.value.trim(),
+      email: emailField.value.trim(),
+      city: cityField.value.trim(),
+      address: addressField.value.trim(),
+      notes: notesField.value.trim()
     }
+    const { error } = await supabase.from('clients').update(updated).eq('id', clientId)
+    if (error) return alert('Ошибка при сохранении')
+    alert('Сохранено!')
+  })
+  deleteBtn.addEventListener('click', async () => {
+    if (!confirm('Удалить клиента?')) return
+    const { error } = await supabase.from('clients').delete().eq('id', clientId)
+    if (error) return alert('Ошибка при удалении')
+    alert('Удалено!')
+    window.location.href = 'clients.html'
+  })
+} else {
+  title.innerText = 'Новый клиент'
+  nameField.disabled = false
+  phoneField.disabled = false
+  phone2Field.disabled = false
+  emailField.disabled = false
+  cityField.disabled = false
+  addressField.disabled = false
+  notesField.disabled = false
+  saveBtn.style.display = 'inline-block'
+  saveBtn.addEventListener('click', async (e) => {
+    e.preventDefault()
+    const name = nameField.value.trim()
+    const phone = phoneField.value.trim()
+    if (!name || !phone) return alert('Имя и телефон обязательны')
+    const { data: existing } = await supabase.from('clients').select('*').or(`name.eq.${name},phone.eq.${phone}`)
+    if (existing.length > 0) return alert('Такой клиент уже существует')
+    const { error } = await supabase.from('clients').insert([{
+      name, phone,
+      phone2: phone2Field.value.trim(),
+      email: emailField.value.trim(),
+      city: cityField.value.trim(),
+      address: addressField.value.trim(),
+      notes: notesField.value.trim()
+    }])
+    if (error) return alert('Ошибка при создании клиента')
+    alert('Клиент добавлен!')
+    window.location.href = 'clients.html'
+  })
+}
 
-    nameInput.disabled = true;
-    phoneInput.disabled = true;
-    saveBtn.style.display = 'none';
-    alert('Данные успешно сохранены!');
-  });
-
-
-  // --- Режим создания нового клиента ---
-  if (!clientId) {
-    document.getElementById('client-title').innerText = 'Новый клиент';
-    document.getElementById('edit-btn').style.display = 'none';
-    document.getElementById('delete-btn').style.display = 'none';
-    document.getElementById('save-btn').style.display = 'inline-block';
-    document.getElementById('client-name').disabled = false;
-    document.getElementById('client-phone').disabled = false;
-
-    saveBtn.addEventListener('click', async (e) => {
-      e.preventDefault();
-      const name = nameInput.value.trim();
-      const phone = phoneInput.value.trim();
-      if (!name || !phone) {
-        alert('Введите имя и телефон');
-        return;
-      }
-
-      
-    // Проверка: есть ли клиент с таким именем или телефоном
-    const { data: existing } = await supabase
-      .from('clients')
-      .select('*')
-      .or(`name.eq.${name},phone.eq.${phone}`);
-
-    if (existing.length > 0) {
-      alert("Клиент с таким именем или телефоном уже существует");
-      return;
-    }
-
-    const { data, error } = await supabase
-        .from('clients')
-        .insert([{ name, phone }]);
-
-      if (error || !data) {
-        console.error('Ошибка при создании:', error);
-        alert('Ошибка при создании клиента.');
-        return;
-      }
-
-      alert('Клиент успешно создан!');
-      window.location.href = 'clients.html';
-    });
-  }
-
-</script>
-
-</body>
+async function loadClient() {
+  const { data, error } = await supabase.from('clients').select('*').eq('id', clientId).single()
+  if (error) return alert('Ошибка загрузки клиента')
+  nameField.value = data.name || ''
+  phoneField.value = data.phone || ''
+  phone2Field.value = data.phone2 || ''
+  emailField.value = data.email || ''
+  cityField.value = data.city || ''
+  addressField.value = data.address || ''
+  notesField.value = data.notes || ''
+  title.innerText = `Клиент: ${data.name}`
+}
+</script></body>
 </html>
