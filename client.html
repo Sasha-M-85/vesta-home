@@ -15,40 +15,75 @@
   <div class="container">
     <h2 id="client-title">Клиент: Имя клиента</h2>
 
-    <div class="mb-3">
-      <label class="form-label">Имя</label>
-      <input id="client-name" class="form-control" disabled />
-    </div>
-
-    <div class="mb-3">
-      <label class="form-label">Телефон</label>
-      <input id="client-phone" class="form-control" disabled />
-    </div>
-
-    <div class="mb-3">
-      <strong>Создан:</strong> <span id="client-created"></span>
+    
     </div>
 
     
-    <button id="edit-btn" class="btn btn-primary mb-3">Редактировать данные</button>
-    
-    <button id="save-btn" class="btn btn-success mb-3 ms-2" style="display:none;">Сохранить изменения</button>
-    <button id="delete-btn" class="btn btn-danger mb-3 ms-2" style="display:none;">Удалить клиента</button>
-    
-    
+<div class="accordion mb-4" id="clientAccordion">
 
-    <div class="mb-3">
-      <label class="form-label">Путь к папке Dropbox</label>
-      <input id="client-dropbox-path" class="form-control" />
-      <button class="btn btn-secondary mt-2">Выбрать папку</button>
+  <div class="accordion-item">
+    <h2 class="accordion-header" id="headingContact">
+      <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseContact" aria-expanded="true">
+        📞 Контактные данные
+      </button>
+    </h2>
+    <div id="collapseContact" class="accordion-collapse collapse show" data-bs-parent="#clientAccordion">
+      <div class="accordion-body">
+        <div class="mb-3">
+          <label class="form-label">Имя *</label>
+          <input id="client-name" class="form-control" required />
+        </div>
+        <div class="mb-3">
+          <label class="form-label">Телефон *</label>
+          <input id="client-phone" class="form-control" required />
+        </div>
+        <div class="mb-3">
+          <label class="form-label">Дополнительный телефон</label>
+          <input id="client-phone2" class="form-control" />
+        </div>
+        <div class="mb-3">
+          <label class="form-label">Email</label>
+          <input id="client-email" class="form-control" />
+        </div>
+      </div>
     </div>
+  </div>
 
-    <div class="mb-4">
-      <h5>Файлы клиента</h5>
-      <div id="client-files" class="border p-3 bg-light">Нет файлов</div>
+  <div class="accordion-item">
+    <h2 class="accordion-header" id="headingAddress">
+      <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseAddress">
+        🏠 Адрес
+      </button>
+    </h2>
+    <div id="collapseAddress" class="accordion-collapse collapse" data-bs-parent="#clientAccordion">
+      <div class="accordion-body">
+        <div class="mb-3">
+          <label class="form-label">Город</label>
+          <input id="client-city" class="form-control" />
+        </div>
+        <div class="mb-3">
+          <label class="form-label">Улица, дом, квартира</label>
+          <input id="client-address" class="form-control" />
+        </div>
+      </div>
     </div>
+  </div>
 
-    <a href="clients.html" class="btn btn-link">&larr; Назад к списку клиентов</a>
+  <div class="accordion-item">
+    <h2 class="accordion-header" id="headingNotes">
+      <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseNotes">
+        📝 Заметки
+      </button>
+    </h2>
+    <div id="collapseNotes" class="accordion-collapse collapse" data-bs-parent="#clientAccordion">
+      <div class="accordion-body">
+        <textarea id="client-notes" class="form-control" rows="3"></textarea>
+      </div>
+    </div>
+  </div>
+</div>
+
+<a href="clients.html" class="btn btn-link">&larr; Назад к списку клиентов</a>
   </div>
 
   
