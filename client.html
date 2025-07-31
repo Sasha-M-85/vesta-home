@@ -128,6 +128,7 @@
     document.getElementById('addProjectBtn').addEventListener('click', () => {
       const name = document.getElementById('projectName').value.trim();
       if (!name) return alert('Введите имя проекта');
+      // TODO: сохранить проект в Supabase
       alert(`Проект "${name}" будет сохранен`);
       document.getElementById('projectName').value = '';
     });
