@@ -13,9 +13,8 @@
 </head>
 <body class="bg-light">
   <div class="container py-4">
-    <h2 class="mb-4"><span class="material-icons md-18">account_circle</span>Клиент: <span id="clientName">Имя клиента</span></h2>
+    <h2 class="mb-4"><span class="material-icons md-18">account_circle</span>Клиент: <span id="clientName">Новый клиент</span></h2>
     <div class="row">
-      <!-- Левая колонка -->
       <div class="col-md-6">
         <form id="clientForm" class="form-wrapper">
           <div class="card mb-3">
@@ -39,7 +38,6 @@
               </div>
             </div>
           </div>
-
           <div class="card mb-3">
             <div class="card-header"><span class="material-icons md-18">location_on</span>Адрес</div>
             <div class="card-body">
@@ -57,23 +55,18 @@
               </div>
             </div>
           </div>
-
           <div class="card mb-3">
             <div class="card-header"><span class="material-icons md-18">note</span>Заметки</div>
             <div class="card-body">
               <textarea class="form-control" id="notes" rows="4"></textarea>
             </div>
           </div>
-
           <div class="d-flex gap-2 mb-4">
             <button type="submit" class="btn btn-primary"><span class="material-icons md-18">save</span>Сохранить</button>
-            <button type="button" class="btn btn-danger"><span class="material-icons md-18">delete</span>Удалить</button>
             <button type="button" class="btn btn-secondary"><span class="material-icons md-18">arrow_back</span>Назад</button>
           </div>
         </form>
       </div>
-
-      <!-- Правая колонка -->
       <div class="col-md-6">
         <div class="card mb-3">
           <div class="card-header">
@@ -82,7 +75,6 @@
           <div class="card-body">
             <label class="form-label">Название проекта:</label>
             <input type="text" class="form-control mb-3" id="projectName" placeholder="Введите имя проекта" />
-
             <div class="mb-3">
               <label class="form-label">Dropbox ссылка:</label>
               <input type="url" class="form-control" id="dropboxLink" />
@@ -109,27 +101,47 @@
       </div>
     </div>
   </div>
-
-  <script>
+  <script type="module">
+    import { supabase } from './supabase.js'
+    const form = document.getElementById("clientForm")
+    form.addEventListener("submit", async (e) => {
+      e.preventDefault()
+      const client = {
+        name: document.getElementById("name").value.trim(),
+        phone: document.getElementById("phone").value.trim(),
+        phone2: document.getElementById("phone2").value.trim(),
+        email: document.getElementById("email").value.trim(),
+        city: document.getElementById("city").value.trim(),
+        street: document.getElementById("street").value.trim(),
+        house: document.getElementById("house").value.trim(),
+        notes: document.getElementById("notes").value.trim(),
+      }
+      const { error } = await supabase.from("clients").insert(client)
+      if (error) {
+        alert("Ошибка при сохранении клиента: " + error.message)
+      } else {
+        alert("Клиент успешно добавлен!")
+        window.location.href = "clients.html"
+      }
+    })
+    document.querySelector(".btn-secondary").addEventListener("click", () => {
+      window.location.href = "clients.html"
+    })
     const totalAmountInput = document.getElementById('totalAmount');
     const depositInput = document.getElementById('deposit');
     const balanceInput = document.getElementById('balance');
-
     function updateBalance() {
       const total = parseFloat(totalAmountInput.value) || 0;
       const deposit = parseFloat(depositInput.value) || 0;
       const balance = total - deposit;
       balanceInput.value = balance.toFixed(2);
     }
-
     totalAmountInput?.addEventListener('input', updateBalance);
     depositInput?.addEventListener('input', updateBalance);
-
     document.getElementById('addProjectBtn').addEventListener('click', () => {
       const name = document.getElementById('projectName').value.trim();
       if (!name) return alert('Введите имя проекта');
-      // TODO: сохранить проект в Supabase
-      alert(`Проект "${name}" будет сохранен`);
+      alert(`Проект "${name}" будет сохранен (реализация позже)`);
       document.getElementById('projectName').value = '';
     });
   </script>
