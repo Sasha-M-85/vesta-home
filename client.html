@@ -63,6 +63,7 @@
           </div>
           <div class="d-flex gap-2 mb-4">
             <button type="submit" class="btn btn-primary"><span class="material-icons md-18">save</span>Сохранить</button>
+            <button type="button" class="btn btn-danger" id="deleteBtn"><span class="material-icons md-18">delete</span>Удалить</button>
             <button type="button" class="btn btn-secondary"><span class="material-icons md-18">arrow_back</span>Назад</button>
           </div>
         </form>
@@ -162,6 +163,24 @@
         alert("Ошибка при сохранении клиента: " + result.error.message)
       } else {
         alert("Клиент успешно сохранён!")
+        window.location.href = "clients.html"
+      }
+    })
+
+    document.getElementById("deleteBtn").addEventListener("click", async () => {
+      if (!clientId) {
+        alert("Удаление возможно только при редактировании клиента.");
+        return;
+      }
+
+      if (!confirm("Вы уверены, что хотите удалить этого клиента?")) return;
+
+      const { error } = await supabase.from("clients").delete().eq("id", clientId)
+
+      if (error) {
+        alert("Ошибка при удалении: " + error.message)
+      } else {
+        alert("Клиент удалён.")
         window.location.href = "clients.html"
       }
     })
