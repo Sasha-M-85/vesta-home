@@ -20,46 +20,23 @@
           <div class="card mb-3">
             <div class="card-header"><span class="material-icons md-18">person</span>Контактные данные</div>
             <div class="card-body">
-              <div class="mb-3">
-                <label class="form-label"><span class="material-icons md-18">badge</span>Имя *</label>
-                <input type="text" class="form-control" id="name" required />
-              </div>
-              <div class="mb-3">
-                <label class="form-label"><span class="material-icons md-18">call</span>Телефон *</label>
-                <input type="text" class="form-control" id="phone" required />
-              </div>
-              <div class="mb-3">
-                <label class="form-label"><span class="material-icons md-18">call_end</span>Доп. телефон</label>
-                <input type="text" class="form-control" id="phone2" />
-              </div>
-              <div class="mb-3">
-                <label class="form-label"><span class="material-icons md-18">email</span>Email</label>
-                <input type="email" class="form-control" id="email" />
-              </div>
+              <div class="mb-3"><label class="form-label"><span class="material-icons md-18">badge</span>Имя *</label><input type="text" class="form-control" id="name" required /></div>
+              <div class="mb-3"><label class="form-label"><span class="material-icons md-18">call</span>Телефон *</label><input type="text" class="form-control" id="phone" required /></div>
+              <div class="mb-3"><label class="form-label"><span class="material-icons md-18">call_end</span>Доп. телефон</label><input type="text" class="form-control" id="phone2" /></div>
+              <div class="mb-3"><label class="form-label"><span class="material-icons md-18">email</span>Email</label><input type="email" class="form-control" id="email" /></div>
             </div>
           </div>
           <div class="card mb-3">
             <div class="card-header"><span class="material-icons md-18">location_on</span>Адрес</div>
             <div class="card-body">
-              <div class="mb-3">
-                <label class="form-label"><span class="material-icons md-18">location_city</span>Город</label>
-                <input type="text" class="form-control" id="city" />
-              </div>
-              <div class="mb-3">
-                <label class="form-label"><span class="material-icons md-18">signpost</span>Улица</label>
-                <input type="text" class="form-control" id="street" />
-              </div>
-              <div class="mb-3">
-                <label class="form-label"><span class="material-icons md-18">home</span>Дом</label>
-                <input type="text" class="form-control" id="house" />
-              </div>
+              <div class="mb-3"><label class="form-label"><span class="material-icons md-18">location_city</span>Город</label><input type="text" class="form-control" id="city" /></div>
+              <div class="mb-3"><label class="form-label"><span class="material-icons md-18">signpost</span>Улица</label><input type="text" class="form-control" id="street" /></div>
+              <div class="mb-3"><label class="form-label"><span class="material-icons md-18">home</span>Дом</label><input type="text" class="form-control" id="house" /></div>
             </div>
           </div>
           <div class="card mb-3">
             <div class="card-header"><span class="material-icons md-18">note</span>Заметки</div>
-            <div class="card-body">
-              <textarea class="form-control" id="notes" rows="4"></textarea>
-            </div>
+            <div class="card-body"><textarea class="form-control" id="notes" rows="4"></textarea></div>
           </div>
           <div class="d-flex gap-2 mb-4">
             <button type="submit" class="btn btn-primary"><span class="material-icons md-18">save</span>Сохранить</button>
@@ -68,35 +45,18 @@
           </div>
         </form>
       </div>
-
       <div class="col-md-6">
         <div class="card mb-3">
-          <div class="card-header">
-            <span class="material-icons md-18">folder</span>Проекты клиента
-          </div>
+          <div class="card-header"><span class="material-icons md-18">folder</span>Проекты клиента</div>
           <div class="card-body">
             <label class="form-label">Название проекта:</label>
             <input type="text" class="form-control mb-3" id="projectName" placeholder="Введите имя проекта" />
-            <div class="mb-3">
-              <label class="form-label">Dropbox ссылка:</label>
-              <input type="url" class="form-control" id="dropboxLink" />
-            </div>
-            <div class="mb-3">
-              <label class="form-label">Общая сумма</label>
-              <input type="number" class="form-control" id="totalAmount" />
-            </div>
-            <div class="mb-3">
-              <label class="form-label">Задаток</label>
-              <input type="number" class="form-control" id="deposit" />
-            </div>
-            <div class="mb-3">
-              <label class="form-label">Остаток</label>
-              <input type="number" class="form-control" id="balance" readonly />
-            </div>
+            <div class="mb-3"><label class="form-label">Dropbox ссылка:</label><input type="url" class="form-control" id="dropboxLink" /></div>
+            <div class="mb-3"><label class="form-label">Общая сумма</label><input type="number" class="form-control" id="totalAmount" /></div>
+            <div class="mb-3"><label class="form-label">Задаток</label><input type="number" class="form-control" id="deposit" /></div>
+            <div class="mb-3"><label class="form-label">Остаток</label><input type="number" class="form-control" id="balance" readonly /></div>
             <div class="d-flex justify-content-end">
-              <button type="button" class="btn btn-outline-success" id="addProjectBtn">
-                <span class="material-icons md-18">add_circle</span>Добавить проект
-              </button>
+              <button type="button" class="btn btn-outline-success" id="addProjectBtn"><span class="material-icons md-18">add_circle</span>Добавить проект</button>
             </div>
           </div>
         </div>
@@ -123,9 +83,7 @@
 
     if (clientId) {
       const { data, error } = await supabase.from("clients").select("*").eq("id", clientId).single()
-      if (error) {
-        alert("Ошибка загрузки клиента")
-      } else {
+      if (!error && data) {
         nameInput.value = data.name
         phoneInput.value = data.phone
         phone2Input.value = data.phone2 || ''
@@ -140,7 +98,6 @@
 
     form.addEventListener("submit", async (e) => {
       e.preventDefault()
-
       const client = {
         name: nameInput.value.trim(),
         phone: phoneInput.value.trim(),
@@ -151,14 +108,9 @@
         house: houseInput.value.trim(),
         notes: notesInput.value.trim(),
       }
-
-      let result
-      if (clientId) {
-        result = await supabase.from("clients").update(client).eq("id", clientId)
-      } else {
-        result = await supabase.from("clients").insert(client)
-      }
-
+      const result = clientId
+        ? await supabase.from("clients").update(client).eq("id", clientId)
+        : await supabase.from("clients").insert(client)
       if (result.error) {
         alert("Ошибка при сохранении клиента: " + result.error.message)
       } else {
@@ -168,19 +120,12 @@
     })
 
     document.getElementById("deleteBtn").addEventListener("click", async () => {
-      if (!clientId) {
-        alert("Удаление возможно только при редактировании клиента.");
-        return;
-      }
-
-      if (!confirm("Вы уверены, что хотите удалить этого клиента?")) return;
-
+      if (!clientId) return alert("Удаление только после сохранения клиента.")
+      if (!confirm("Вы уверены, что хотите удалить этого клиента?")) return
       const { error } = await supabase.from("clients").delete().eq("id", clientId)
-
-      if (error) {
-        alert("Ошибка при удалении: " + error.message)
-      } else {
-        alert("Клиент удалён.")
+      if (error) alert("Ошибка удаления: " + error.message)
+      else {
+        alert("Клиент удалён")
         window.location.href = "clients.html"
       }
     })
@@ -189,7 +134,6 @@
       window.location.href = "clients.html"
     })
 
-    // Расчёт остатка
     const totalAmountInput = document.getElementById('totalAmount');
     const depositInput = document.getElementById('deposit');
     const balanceInput = document.getElementById('balance');
@@ -197,18 +141,40 @@
     function updateBalance() {
       const total = parseFloat(totalAmountInput.value) || 0;
       const deposit = parseFloat(depositInput.value) || 0;
-      const balance = total - deposit;
-      balanceInput.value = balance.toFixed(2);
+      balanceInput.value = (total - deposit).toFixed(2);
     }
 
-    totalAmountInput?.addEventListener('input', updateBalance);
-    depositInput?.addEventListener('input', updateBalance);
+    totalAmountInput.addEventListener('input', updateBalance);
+    depositInput.addEventListener('input', updateBalance);
 
-    document.getElementById('addProjectBtn').addEventListener('click', () => {
+    document.getElementById('addProjectBtn').addEventListener('click', async () => {
       const name = document.getElementById('projectName').value.trim();
+      const link = document.getElementById('dropboxLink').value.trim();
+      const total = parseFloat(document.getElementById('totalAmount').value) || 0;
+      const deposit = parseFloat(document.getElementById('deposit').value) || 0;
+      const balance = total - deposit;
+
       if (!name) return alert('Введите имя проекта');
-      alert(`Проект "${name}" будет сохранен (реализация позже)`);
-      document.getElementById('projectName').value = '';
+      if (!clientId) return alert("Сначала сохраните клиента.");
+
+      const { error } = await supabase.from("projects").insert({
+        client_id: clientId,
+        title: name,
+        dropbox_link: link,
+        total_amount: total.toFixed(2),
+        deposit: deposit.toFixed(2),
+        balance: balance.toFixed(2),
+      });
+
+      if (error) alert("Ошибка при добавлении проекта: " + error.message);
+      else {
+        alert("Проект успешно добавлен!");
+        document.getElementById('projectName').value = '';
+        document.getElementById('dropboxLink').value = '';
+        document.getElementById('totalAmount').value = '';
+        document.getElementById('deposit').value = '';
+        document.getElementById('balance').value = '';
+      }
     });
   </script>
 </body>
